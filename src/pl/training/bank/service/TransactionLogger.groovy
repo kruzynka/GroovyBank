@@ -23,6 +23,16 @@ class TransactionLogger implements Accounts {
     //dodaje interface, który implementuje
     private Accounts accounts
 
+    private process(Closure<Void> callback) {
+        try {
+            callback()
+            println(SUCCESS_MESSAGE)
+        } catch (BankException ex) {
+            println("Status: Failure (${-> ex.class.simpleName})")
+        }
+        println(SEPARATOR)
+    }
+
     @Override
     Account createAccount(Customer customer) {
         Account account = accounts.createAccount(customer)
@@ -30,39 +40,69 @@ class TransactionLogger implements Accounts {
         return account
     }
 
+    /**
+     * Przy użyciu process zastąpimy część wspólną dla trzech metod
+     * @param accountNumber
+     * @param funds
+     */
     @Override
     void deposit(String accountNumber, BigDecimal funds) {
-        try {
-        accounts.deposit(accountNumber, funds)
+
+        /*możemy użyć process w ramach metody:*/
+        /*Closure<Void> depositOperation = {
+            accounts.deposit(accountNumber, funds)
+            println("$accountNumber <= ${formatter.format((funds))}")
+        }
+        process {depositOperation}*/
+
+        /*możemy użyć bezpośrednio process, gdzie process posiada swoją definicję poza metodą deposit:*/
+        process {
+            accounts.deposit(accountNumber, funds)
+            println("$accountNumber <= ${formatter.format((funds))}")
+        }
+
+        /*try {
+            accounts.deposit(accountNumber, funds)
             println("$accountNumber <= ${formatter.format((funds))}")
             println(SUCCESS_MESSAGE)
         } catch (BankException ex) {
-            println("Status: Failure (${ -> ex.class.simpleName})")
+            println("Status: Failure (${-> ex.class.simpleName})")
         }
-        println(SEPARATOR)
+        println(SEPARATOR)*/
+
     }
 
     @Override
     void withdraw(String accountNumber, BigDecimal funds) {
-        try {
+        process {
+            accounts.withdraw(accountNumber, funds)
+            println("$accountNumber => ${formatter.format((funds))}")
+        }
+
+        /*try {
             accounts.withdraw(accountNumber, funds)
             println("$accountNumber => ${formatter.format((funds))}")
             println(SUCCESS_MESSAGE)
         } catch (BankException ex) {
             println("Status: Failure (${ -> ex.class.simpleName})")
         }
-        println(SEPARATOR)
+        println(SEPARATOR)*/
     }
 
     @Override
     void transfer(String sourceAccountNumber, String destinationAccountNumber, BigDecimal funds) {
-        try {
+        process {
+            accounts.transfer(sourceAccountNumber, destinationAccountNumber, funds)
+            println("$sourceAccountNumber => ${formatter.format((funds))} =>  $destinationAccountNumber")
+        }
+
+        /*try {
             accounts.transfer(sourceAccountNumber, destinationAccountNumber, funds)
             println("$sourceAccountNumber => ${formatter.format((funds))} =>  $destinationAccountNumber")
             println(SUCCESS_MESSAGE)
         } catch (BankException ex) {
             println("Status: Failure (${ -> ex.class.simpleName})")
         }
-        println(SEPARATOR)
+        println(SEPARATOR)*/
     }
 }

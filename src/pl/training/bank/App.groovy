@@ -7,6 +7,7 @@ import pl.training.bank.service.Accounts
 import pl.training.bank.service.AccountsRepository
 import pl.training.bank.service.AccountsService
 import pl.training.bank.service.HashMapAccountsRepository
+import pl.training.bank.service.Observer
 import pl.training.bank.service.TransactionLogger
 
 class App {
@@ -30,6 +31,15 @@ class App {
                 accountNumberGenerator: accountNumberGenerator,
                 accountsRepository: accountsRepository)
         TransactionLogger accounts = new TransactionLogger(accounts: accountsService)
+
+        /*accountsService.addObserver {
+            //równoważna postać println "Deposit limit: ${account.number}"
+            println "Deposit limit: ${it.number}"
+        }*/
+
+        /*powyższą część można zastąpić poprzed FileLimitLogger*/
+        accountsService.addObserver(new FileLimitLogger())
+
         /*------------------------------------------------------------------------------------------------------------*/
 
         def customerOne = new Customer(firstName: 'Jan', lastName: 'Kowalski')
@@ -38,24 +48,28 @@ class App {
         def accountOne = accounts.createAccount(customerOne)
         def accountTwo = accounts.createAccount(customerTwo)
 
-        accounts.deposit(accountOne.number, 400)
+        accounts.deposit(accountOne.number, 300)
         accounts.deposit(accountTwo.number, 400)
         accounts.transfer(accountOne.number, accountTwo.number, 200)
 
+        accounts.deposit(accountOne.number, 20_001)
+        accounts.deposit(accountOne.number, 19_000)
 
-//        def accounts = [accountOne, accountTwo]
-//        println accounts*.balance
-
-
-
-//        account.addCustomer(customerOne) //to samo co account addCustomer(customerOne)
-//        account.deposit(3000L) //to samo co account addCustomer(customerOne)
-//        account.withdraw(200G) //to samo co account addCustomer(customerOne)
-//
-//        println(account.balance)
-//        println(account.getCustomers())
-
-        //println(logger)
 
     }
+
+}
+
+/**
+ * Powiadomienie do pliku
+ */
+class FileLimitLogger implements Observer<Account> {
+
+    @Override
+    void update(Account account) {
+        new File('logs.txt').withWriter('utf-8') {
+            writer -> writer.writeLine "Deposit limit on account: ${account.number}"
+        }
+    }
+
 }

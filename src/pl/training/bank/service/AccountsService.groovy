@@ -1,13 +1,18 @@
 package pl.training.bank.service
 
+import org.apache.ivy.core.report.DownloadStatus
 import pl.training.bank.entity.Account
 import pl.training.bank.entity.Customer
 
-class AccountsService implements Accounts {
+/** Stworzyliśmy Observable<T> i chcemy zaimpementować je do AccountService */
+class AccountsService implements Accounts, Observable<Account> {
+
+    // _ zwiększa czytelność, będzie ignorowane
+    private static final DEPOSIT_LIMIT = 20_000
 
     private AccountsRepository accountsRepository
     private AccountNumberGenerator accountNumberGenerator
-    //nie robimy paskudztwa private AccountNumberGenerator accountNumberGenerator = new accountNumberGenerator
+    //nie robimy paskudztwa: private AccountNumberGenerator accountNumberGenerator = new accountNumberGenerator
 
     /**
      * nie moze to byc jako void, tylko jako Account
@@ -29,6 +34,10 @@ class AccountsService implements Accounts {
      */
     void deposit(String accountNumber, BigDecimal funds) {
         Account account = accountsRepository.getBy(accountNumber) //jeżeli to konto jest...
+
+        if (funds > DEPOSIT_LIMIT){
+            notifyObservers(account)
+        }
         account.deposit(funds) // depoujemy środki
         //account? bo dostaniemy nulla przy depozycie, ale ze mamy AccountNotFoundException, nie musimy już
         accountsRepository.update(account)
@@ -62,4 +71,6 @@ class AccountsService implements Accounts {
             deposit(sourceAccountNumber, funds) // jeżeli się nie uda, zwramy środki na 1. konto
         }
     }
+
+
 }
