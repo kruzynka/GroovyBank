@@ -8,9 +8,13 @@ import pl.training.bank.service.AccountsService
 
 class App {
 
-    //insert psvm :) public jest zbędny, w świecie Groovy wszystko jest public
+    //insert psvm :) public jest zbędny, w świecie Groovy wszystko domyślnie jest public
     static void main(String[] args) {
 
+        /**
+         * utworz nową insancję, nowego typu
+         * operator new nie jest słuszny, ponieważ wprowadza z góry narzucone powiązanie
+         */
         AccountNumberGenerator accountNumberGenerator = new AccountNumberGenerator()
         AccountsRepository accountsRepository = new AccountsRepository()
         AccountsService accountsService = new AccountsService(
@@ -31,7 +35,6 @@ class App {
 
         def accounts = [accountOne, accountTwo]
         println accounts*.balance
-
 
 //        account.addCustomer(customerOne) //to samo co account addCustomer(customerOne)
 //        account.deposit(3000L) //to samo co account addCustomer(customerOne)

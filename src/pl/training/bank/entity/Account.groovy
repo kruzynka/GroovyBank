@@ -4,7 +4,7 @@ import static java.util.Collections.unmodifiableList
 
 class Account {
 
-    Long id
+    private Long id
     private String number = ""
     private BigDecimal balance = 0
     private Set<Customer> customers = [] //zmienilismy List na Set - zbiór nie pozwala na duplikaty

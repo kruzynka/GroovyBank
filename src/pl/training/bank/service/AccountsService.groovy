@@ -9,27 +9,36 @@ class AccountsService {
     private AccountNumberGenerator accountNumberGenerator
     //nie robimy paskudztwa private AccountNumberGenerator accountNumberGenerator = new accountNumberGenerator
 
-    //nie moze to byc jako void, tylko jako Account
-    //przypiszemy kolejny numer konta, mozem równoważnie uzyc accountNumberGenerator.next:
+    /**
+     * nie moze to byc jako void, tylko jako Account
+     * przypiszemy kolejny numer konta, mozem równoważnie uzyc accountNumberGenerator.next:
+     */
     Account createAccount(Customer customer) {
+        //tworzymy nową instancję i inicjalizujemy nowym numerem:
         Account account = new Account(number: accountNumberGenerator.getNext())
-        account.addCustomer(customer)
-        accountsRepository.save(account)
-        return account
+        account.addCustomer(customer) // przypisujemy otrzymanego customera
+        accountsRepository.save(account) // zapisujemy na stałe w repozytorium
+        return account // zwracamy konto
     }
 
     /**
-     * 1. parametr jest typowany, 2. nie jest typowany
+     * Deponujemy środki na konto
+     * accountNumber parametr jest typowany
      * @param accountNumber
      * @param founds
      */
     void deposit(String accountNumber, BigDecimal funds) {
-        Account account = accountsRepository.getBy(accountNumber)
-        account.deposit(funds)
-        //account? bo dostaniemy nulla przy depozycie, ale ze mamy AccountNotFoundException, nie musimy juz
+        Account account = accountsRepository.getBy(accountNumber) //jeżeli to konto jest...
+        account.deposit(funds) // depoujemy środki
+        //account? bo dostaniemy nulla przy depozycie, ale ze mamy AccountNotFoundException, nie musimy już
         accountsRepository.update(account)
     }
 
+    /**
+     * Wypłać środki, pod warunkiem, że są środki
+     * @param accountNumber
+     * @param funds
+     */
     void withdraw(String accountNumber, BigDecimal funds) {
         Account account = accountsRepository.getBy(accountNumber)
         if (account.balance < funds) { //gdy chcemy rzucic wyjatkiem >=
@@ -39,12 +48,18 @@ class AccountsService {
         accountsRepository.update(account)
     }
 
+    /**
+     * Dokonujemy transferu
+     * @param sourceAccountNumber
+     * @param destinationAccountNumber
+     * @param funds
+     */
     void transfer(String sourceAccountNumber, String destinationAccountNumber, BigDecimal funds) {
-        withdraw(sourceAccountNumber, funds)
+        withdraw(sourceAccountNumber, funds) //wypłacamy środki z 1. konta
         try {
-            deposit(destinationAccountNumber, funds)
+            deposit(destinationAccountNumber, funds) // próbujemy zdeponować
         } catch (AccountNotFoundException ex) {
-            deposit(sourceAccountNumber, funds)
+            deposit(sourceAccountNumber, funds) // jeżeli się nie uda, zwramy środki na 1. konto
         }
     }
 }

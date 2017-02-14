@@ -1,10 +1,16 @@
 package pl.training.bank.entity
 
+/**
+ * Gdy mamy np. Long id bez ustawienia uprawnień
+ * nie trzymamy się zasady ukrywania informacji,
+ * każdy będzie mieć dostęp do pól z klasy, ale w ramach zdefiniowanych zmiennych
+ * Gdybyśmy nadali ustawienie final, nie moglibyśmy ustawić wartości dla zmiennej
+ */
 class Customer {//definiujemy nową klasę
 
-    Long id
-    String firstName
-    String lastName
+    private Long id
+    private String firstName
+    String lastName //można ustawiać i pobierać wartość (w przeciwieństwie do dwóch pozostałych)
 
     Long getId() {
         id
@@ -15,3 +21,4 @@ class Customer {//definiujemy nową klasę
     }
 
 }
+
