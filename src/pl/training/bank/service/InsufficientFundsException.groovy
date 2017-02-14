@@ -1,4 +1,6 @@
 package pl.training.bank.service
 
-class InsufficientFundsException extends RuntimeException  {
+import pl.training.bank.BankException
+
+class InsufficientFundsException extends BankException  {
 }

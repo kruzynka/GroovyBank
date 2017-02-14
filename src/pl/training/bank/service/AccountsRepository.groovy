@@ -2,33 +2,18 @@ package pl.training.bank.service
 
 import pl.training.bank.entity.Account
 
-import java.util.concurrent.atomic.AtomicLong
-
 /**
- * Logika do kont
+ * Deklarujemy sygnatury metod, więc wrzucamy te same metody co w HashMapAccountsRepository
+ * Również nie ma prawa wprowadzić np. pól
+ * Chyba, że definiujemy default ... np. default void tes() { ... } - jest to klasa np. do której nie mamy źródeł
+ * Przy interface może być tylko extends (ponieważ może tylko dziedziczyć, nie może implementować)
  */
-class AccountsRepository {
+interface AccountsRepository {
 
-    private counter = new AtomicLong() //rownowazna forma private AtomicLong counter = new AtomicLong()
-    private Map<String, Account> accounts = [:] //mapa, początkowo ustawiona jako pusta
+    Long save(Account account)
 
-    Long save(Account account) {
-        Long id = counter.incrementAndGet()
-        account.id = id
-        accounts[account.number] = account //konto wstawia pod numerem do mapy
-        return id
-    }
+    Account getBy(String accountNumber)
 
-    Account getBy(String accountNumber) { //sprawdzamy czy nr konta jest w mapie
-        if (!(accountNumber in accounts)) { // jeżeli nie to wyjątkiem rzucamy
-            throw new AccountNotFoundException()
-        }
-        accounts[accountNumber] //zwracamy konta z mapy
-    }
-
-    void update(Account account) {
-        getBy(account.number) //sprawdzamy czy jest konto czy go nie ma
-        accounts[account.number] = account //jeżeli konto było, dosłownie nadpisujemy konto z mapy
-    }
+    void update(Account account)
 
 }

@@ -3,7 +3,7 @@ package pl.training.bank.service
 import pl.training.bank.entity.Account
 import pl.training.bank.entity.Customer
 
-class AccountsService {
+class AccountsService implements Accounts {
 
     private AccountsRepository accountsRepository
     private AccountNumberGenerator accountNumberGenerator
