@@ -1,4 +1,4 @@
-package pl.training.bank.service
+package pl.training.bank.utils
 
 /**
  * Tworzymy trade ze zbiorem obserwatorów, których można... dodawać, usuwać i powiadamiać observatorów

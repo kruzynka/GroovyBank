@@ -1,4 +1,4 @@
-package pl.training.bank.service
+package pl.training.bank.utils
 
 /**
  * Obserwator uzależniony od liczby eventów

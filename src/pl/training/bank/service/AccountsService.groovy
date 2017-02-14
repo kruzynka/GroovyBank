@@ -1,8 +1,8 @@
 package pl.training.bank.service
 
-import org.apache.ivy.core.report.DownloadStatus
 import pl.training.bank.entity.Account
 import pl.training.bank.entity.Customer
+import pl.training.bank.utils.Observable
 
 /** Stworzyliśmy Observable<T> i chcemy zaimpementować je do AccountService */
 class AccountsService implements Accounts, Observable<Account> {

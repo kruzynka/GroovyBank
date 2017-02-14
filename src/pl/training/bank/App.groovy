@@ -3,12 +3,13 @@ package pl.training.bank
 import pl.training.bank.entity.Account
 import pl.training.bank.entity.Customer
 import pl.training.bank.service.AccountNumberGenerator
-import pl.training.bank.service.Accounts
 import pl.training.bank.service.AccountsRepository
 import pl.training.bank.service.AccountsService
 import pl.training.bank.service.HashMapAccountsRepository
-import pl.training.bank.service.Observer
+import pl.training.bank.utils.Observer
 import pl.training.bank.service.TransactionLogger
+
+import java.util.function.LongToDoubleFunction
 
 class App {
 
@@ -55,6 +56,10 @@ class App {
         accounts.deposit(accountOne.number, 20_001)
         accounts.deposit(accountOne.number, 19_000)
 
+        //dokonujemy tranferu z pierwzego konta na drugie
+        def transferFromAccountOne = accounts.&transfer.curry(accountOne.number)
+        transferFromAccountOne(accountTwo.number, 30)
+
 
     }
 
@@ -71,5 +76,31 @@ class FileLimitLogger implements Observer<Account> {
             writer -> writer.writeLine "Deposit limit on account: ${account.number}"
         }
     }
-
 }
+
+/*
+Uogólniona forma interejsu:
+
+interface Converter<Source, Destination> {
+    Destination convert(Source source)
+}
+
+class StringToLongConverter implements Converter<String, Long> {
+
+    @Override
+    Long convert(String s) {
+        return text as Long
+    }
+}
+
+class Writer<Output extends OutputStream> {
+
+    private Output output
+
+    void write(byte[] bytes) {
+        output.write(bytes)
+    }
+}
+
+new Writer<PrintWriter>()
+ */
