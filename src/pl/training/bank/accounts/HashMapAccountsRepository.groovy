@@ -1,6 +1,4 @@
-package pl.training.bank.service
-
-import pl.training.bank.entity.Account
+package pl.training.bank.accounts
 
 import java.util.concurrent.atomic.AtomicLong
 

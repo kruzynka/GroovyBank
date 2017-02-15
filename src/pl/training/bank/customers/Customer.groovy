@@ -1,4 +1,4 @@
-package pl.training.bank.entity
+package pl.training.bank.customers
 
 /**
  * Gdy mamy np. Long id bez ustawienia uprawnień

@@ -2,6 +2,7 @@ package pl.training.bank.utils
 
 /**
  * Tworzymy trade ze zbiorem obserwatorów, których można... dodawać, usuwać i powiadamiać observatorów
+ * ma działać z różnymi typami
  */
 trait Observable<T> {
 

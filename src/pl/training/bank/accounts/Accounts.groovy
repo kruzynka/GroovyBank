@@ -1,7 +1,6 @@
-package pl.training.bank.service
+package pl.training.bank.accounts
 
-import pl.training.bank.entity.Account
-import pl.training.bank.entity.Customer
+import pl.training.bank.customers.Customer
 
 interface Accounts {
 

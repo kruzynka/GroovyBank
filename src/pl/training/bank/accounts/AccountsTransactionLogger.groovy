@@ -1,19 +1,17 @@
-package pl.training.bank.service
+package pl.training.bank.accounts
 
 import pl.training.bank.BankException
-import pl.training.bank.entity.Account
-import pl.training.bank.entity.Customer
+import pl.training.bank.customers.Customer
 
-import javax.swing.text.NumberFormatter
 import java.text.NumberFormat
 
 /**
  * TransactionLogger musi udawać Accounts, więc musimy robić implementacjewszystkich metod
  */
-class TransactionLogger implements Accounts {
+class AccountsTransactionLogger implements Accounts {
 
-    //definiuje statyczny separator
-    private static final String SEPARATOR = "#" * 20
+    //definiuje statyczny separator, nie musimy dawać x razy znak #
+    private static final String SEPARATOR = "#" * 70
     private static final String SUCCESS_MESSAGE = "Status: Success"
     // w momencie użycia będzie widział ex, więc musi być przekazany przez -> :
     //private static final String EXCEPTION_MESSAGE = "Status: Failure (${ -> ex.class.simpleName})"
@@ -49,11 +47,13 @@ class TransactionLogger implements Accounts {
     void deposit(String accountNumber, BigDecimal funds) {
 
         /*możemy użyć process w ramach metody:*/
-        /*Closure<Void> depositOperation = {
+        /*
+        Closure<Void> depositOperation = {
             accounts.deposit(accountNumber, funds)
             println("$accountNumber <= ${formatter.format((funds))}")
         }
-        process {depositOperation}*/
+        process {depositOperation}
+        */
 
         /*możemy użyć bezpośrednio process, gdzie process posiada swoją definicję poza metodą deposit:*/
         process {
@@ -61,14 +61,17 @@ class TransactionLogger implements Accounts {
             println("$accountNumber <= ${formatter.format((funds))}")
         }
 
-        /*try {
+        /*Pierwowzór, w późniejszym etapie będziemy upraszczać:*/
+        /*
+        try {
             accounts.deposit(accountNumber, funds)
             println("$accountNumber <= ${formatter.format((funds))}")
             println(SUCCESS_MESSAGE)
         } catch (BankException ex) {
             println("Status: Failure (${-> ex.class.simpleName})")
         }
-        println(SEPARATOR)*/
+        println(SEPARATOR)
+        */
 
     }
 
@@ -79,14 +82,16 @@ class TransactionLogger implements Accounts {
             println("$accountNumber => ${formatter.format((funds))}")
         }
 
-        /*try {
+        /*
+        try {
             accounts.withdraw(accountNumber, funds)
             println("$accountNumber => ${formatter.format((funds))}")
             println(SUCCESS_MESSAGE)
         } catch (BankException ex) {
             println("Status: Failure (${ -> ex.class.simpleName})")
         }
-        println(SEPARATOR)*/
+        println(SEPARATOR)
+        */
     }
 
     @Override
@@ -96,13 +101,15 @@ class TransactionLogger implements Accounts {
             println("$sourceAccountNumber => ${formatter.format((funds))} =>  $destinationAccountNumber")
         }
 
-        /*try {
+        /*
+        try {
             accounts.transfer(sourceAccountNumber, destinationAccountNumber, funds)
             println("$sourceAccountNumber => ${formatter.format((funds))} =>  $destinationAccountNumber")
             println(SUCCESS_MESSAGE)
         } catch (BankException ex) {
             println("Status: Failure (${ -> ex.class.simpleName})")
         }
-        println(SEPARATOR)*/
+        println(SEPARATOR)
+        */
     }
 }

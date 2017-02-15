@@ -1,4 +1,4 @@
-package pl.training.bank.service
+package pl.training.bank.accounts
 
 import pl.training.bank.BankException
 

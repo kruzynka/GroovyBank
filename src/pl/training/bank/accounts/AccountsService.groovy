@@ -1,10 +1,11 @@
-package pl.training.bank.service
+package pl.training.bank.accounts
 
-import pl.training.bank.entity.Account
-import pl.training.bank.entity.Customer
+import pl.training.bank.customers.Customer
 import pl.training.bank.utils.Observable
 
-/** Stworzyliśmy Observable<T> i chcemy zaimpementować je do AccountService */
+/**
+ * Stworzyliśmy Observable<T> i chcemy zaimplementować je do AccountService
+ */
 class AccountsService implements Accounts, Observable<Account> {
 
     // _ zwiększa czytelność, będzie ignorowane

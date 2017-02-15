@@ -1,15 +1,13 @@
 package pl.training.bank
 
-import pl.training.bank.entity.Account
-import pl.training.bank.entity.Customer
-import pl.training.bank.service.AccountNumberGenerator
-import pl.training.bank.service.AccountsRepository
-import pl.training.bank.service.AccountsService
-import pl.training.bank.service.HashMapAccountsRepository
+import pl.training.bank.accounts.Account
+import pl.training.bank.customers.Customer
+import pl.training.bank.accounts.AccountNumberGenerator
+import pl.training.bank.accounts.AccountsRepository
+import pl.training.bank.accounts.AccountsService
+import pl.training.bank.accounts.HashMapAccountsRepository
 import pl.training.bank.utils.Observer
-import pl.training.bank.service.TransactionLogger
-
-import java.util.function.LongToDoubleFunction
+import pl.training.bank.accounts.AccountsTransactionLogger
 
 class App {
 
@@ -21,22 +19,30 @@ class App {
          * operator new nie jest słuszny, ponieważ wprowadza z góry narzucone powiązanie
          */
         AccountNumberGenerator accountNumberGenerator = new AccountNumberGenerator()
+
         //dawniej AccountsRepository(), ale dodalismy interfejs, więc teraz korzystamy z HashMapAccountsRepository:
         AccountsRepository accountsRepository = new HashMapAccountsRepository()
+
         /**
          * zamieniamy AccountsService accountsService = new AccountsService przez
          * Accounts accountsService = new AccountsService
          * bo wdrożyliśmy interface
          */
-        AccountsService accountsService = new AccountsService(
-                accountNumberGenerator: accountNumberGenerator,
+        AccountsService accountsService = new AccountsService(accountNumberGenerator: accountNumberGenerator,
                 accountsRepository: accountsRepository)
-        TransactionLogger accounts = new TransactionLogger(accounts: accountsService)
+        AccountsTransactionLogger accounts = new AccountsTransactionLogger(accounts: accountsService)
 
-        /*accountsService.addObserver {
-            //równoważna postać println "Deposit limit: ${account.number}"
-            println "Deposit limit: ${it.number}"
-        }*/
+        accountsService.addObserver {
+            println "Deposit limit: ${it.number}" //równoważna postać dla ${it.number} to użycie ${account.number}"
+        }
+
+        accountsService.addObserver(new Observer() {
+
+            @Override
+            void update(Object event) {
+                println("Alert")
+            }
+        })
 
         /*powyższą część można zastąpić poprzed FileLimitLogger*/
         accountsService.addObserver(new FileLimitLogger())

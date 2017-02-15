@@ -1,4 +1,6 @@
-package pl.training.bank.entity
+package pl.training.bank.accounts
+
+import pl.training.bank.customers.Customer
 
 import static java.util.Collections.unmodifiableList
 
