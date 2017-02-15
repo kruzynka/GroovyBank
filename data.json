@@ -1,0 +1,26 @@
+[
+    {
+        "customers": [
+            {
+                "firstName": "Jan",
+                "id": null,
+                "lastName": "Kowalski"
+            }
+        ],
+        "id": 1,
+        "balance": 100,
+        "number": "00000000000000000000000001"
+    },
+    {
+        "customers": [
+            {
+                "firstName": "Marek",
+                "id": null,
+                "lastName": "Nowak"
+            }
+        ],
+        "id": 2,
+        "balance": 600,
+        "number": "00000000000000000000000002"
+    }
+]

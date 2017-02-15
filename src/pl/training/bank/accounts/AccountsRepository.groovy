@@ -14,4 +14,7 @@ interface AccountsRepository {
 
     void update(Account account)
 
+    //lista ze wszystkimi lementami z AccountsRepository
+    List<Account> getAll()
+
 }

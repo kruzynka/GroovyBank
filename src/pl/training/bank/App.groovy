@@ -1,5 +1,6 @@
 package pl.training.bank
 
+import groovy.json.JsonSlurper
 import pl.training.bank.accounts.Account
 import pl.training.bank.customers.Customer
 import pl.training.bank.accounts.AccountNumberGenerator
@@ -13,6 +14,8 @@ class App {
 
     //insert psvm :) public jest zbędny, w świecie Groovy wszystko domyślnie jest public
     static void main(String[] args) {
+
+        //new Account().setBalance(22G).setId(33L)
 
         /**
          * utworz nową insancję, nowego typu
@@ -31,6 +34,7 @@ class App {
         AccountsService accountsService = new AccountsService(accountNumberGenerator: accountNumberGenerator,
                 accountsRepository: accountsRepository)
         AccountsTransactionLogger accounts = new AccountsTransactionLogger(accounts: accountsService)
+
 
         accountsService.addObserver {
             println "Deposit limit: ${it.number}" //równoważna postać dla ${it.number} to użycie ${account.number}"
@@ -59,6 +63,9 @@ class App {
         accounts.deposit(accountTwo.number, 400)
         accounts.transfer(accountOne.number, accountTwo.number, 200)
 
+        //zapis do pliku json
+        accountsService.exportToFile('data.json')
+
         accounts.deposit(accountOne.number, 20_001)
         accounts.deposit(accountOne.number, 19_000)
 
@@ -68,6 +75,7 @@ class App {
 
 
     }
+
 
 }
 

@@ -32,4 +32,9 @@ class HashMapAccountsRepository implements AccountsRepository {
         accounts[account.number] = account //jeżeli konto było, dosłownie nadpisujemy konto z mapy
     }
 
+    @Override
+    List<Accounts> getAll() {
+       // JsonOutput.toJson(accounts.values)
+        accounts.values() as List<Account>
+    }
 }

@@ -1,9 +1,18 @@
 package pl.training.bank.accounts
 
+import groovy.json.JsonSlurper
+import groovy.transform.Canonical
+import groovy.transform.builder.Builder
+import groovy.transform.builder.SimpleStrategy
 import pl.training.bank.customers.Customer
 
 import static java.util.Collections.unmodifiableList
 
+/**
+ * Sprawimy że kompilator widzi wszystko tzn. mamy wsparcie z poziomu IDE
+ */
+@Builder(builderStrategy = SimpleStrategy)
+@Canonical
 class Account {
 
     private Long id
@@ -67,3 +76,5 @@ class Account {
     }
 
 }
+
+

@@ -1,7 +1,10 @@
 package pl.training.bank.accounts
 
+import groovy.json.JsonOutput
 import pl.training.bank.customers.Customer
 import pl.training.bank.utils.Observable
+
+import static groovy.json.JsonOutput.*
 
 /**
  * Stworzyliśmy Observable<T> i chcemy zaimplementować je do AccountService
@@ -73,5 +76,11 @@ class AccountsService implements Accounts, Observable<Account> {
         }
     }
 
+    void exportToFile(String fileName) {
+        new File(fileName) << prettyPrint(toJson(accountsRepository.all))
+        }
 
-}
+    }
+
+
+
