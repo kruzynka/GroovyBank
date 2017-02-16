@@ -1,7 +1,9 @@
 package pl.training.bank
 
 import groovy.json.JsonSlurper
+import org.apache.commons.dbcp2.BasicDataSource
 import pl.training.bank.accounts.Account
+import pl.training.bank.accounts.MySqlAccountsRepository
 import pl.training.bank.customers.Customer
 import pl.training.bank.accounts.AccountNumberGenerator
 import pl.training.bank.accounts.AccountsRepository
@@ -10,10 +12,15 @@ import pl.training.bank.accounts.HashMapAccountsRepository
 import pl.training.bank.utils.Observer
 import pl.training.bank.accounts.AccountsTransactionLogger
 
+import groovy.sql.Sql
+
+
 class App {
 
     //insert psvm :) public jest zbędny, w świecie Groovy wszystko domyślnie jest public
     static void main(String[] args) {
+
+        def dataSource = new BasicDataSource(url: "jdbc:mysql://localhost:3306/bank",username: "root", password: "admin")
 
         //new Account().setBalance(22G).setId(33L)
 
@@ -21,10 +28,14 @@ class App {
          * utworz nową insancję, nowego typu
          * operator new nie jest słuszny, ponieważ wprowadza z góry narzucone powiązanie
          */
-        AccountNumberGenerator accountNumberGenerator = new AccountNumberGenerator()
+        //AccountNumberGenerator accountNumberGenerator = new AccountNumberGenerator()
+        //na potrzeby MySQL:
+        AccountNumberGenerator accountNumberGenerator = new AccountNumberGenerator(dataSource)
 
         //dawniej AccountsRepository(), ale dodalismy interfejs, więc teraz korzystamy z HashMapAccountsRepository:
-        AccountsRepository accountsRepository = new HashMapAccountsRepository()
+        //AccountsRepository accountsRepository = new HashMapAccountsRepository()
+        //zamieniamy powyzsze na opcje polaczenia z baza:
+        AccountsRepository accountsRepository = new MySqlAccountsRepository(dataSource)
 
         /**
          * zamieniamy AccountsService accountsService = new AccountsService przez
@@ -34,6 +45,7 @@ class App {
         AccountsService accountsService = new AccountsService(accountNumberGenerator: accountNumberGenerator,
                 accountsRepository: accountsRepository)
         AccountsTransactionLogger accounts = new AccountsTransactionLogger(accounts: accountsService)
+
 
 
         accountsService.addObserver {
@@ -66,8 +78,8 @@ class App {
         //zapis do pliku json
         accountsService.exportToFile('data.json')
 
-        accounts.deposit(accountOne.number, 20_001)
-        accounts.deposit(accountOne.number, 19_000)
+        //accounts.deposit(accountOne.number, 20_001)
+        //accounts.deposit(accountOne.number, 19_000)
 
         //dokonujemy tranferu z pierwzego konta na drugie
         def transferFromAccountOne = accounts.&transfer.curry(accountOne.number)
